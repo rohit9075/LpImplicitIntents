@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">LpRegister</string>
+    <string name="text_image_is_mandatory">Image is Mandatory</string>
+    <string name="text_error_image_is_mandaroty">Image is mandaroty</string>
+    <string name="text_first_name">First Name</string>
+    <string name="text_last_name">Last Name</string>
+    <string name="text_email_id">Email Id</string>
+    <string name="text_date_of_birth">Date of birth</string>
+    <string name="text_password">Password</string>
+    <string name="text_confirm_password">Confirm Password</string>
+    <string name="text_register">register</string>
+    <string name="text_already_a_member">Already a member</string>
+    <string name="text_mobile_number">Mobile Number</string>
+    <string name="text_male">Male</string>
+    <string name="text_female">Female</string>
+    <string name="title_activity_candidate_profile">CandidateProfileActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+</resources>
