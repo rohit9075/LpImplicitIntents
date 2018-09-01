@@ -208,6 +208,8 @@ public class CandidateProfileActivity extends AppCompatActivity
         } else if (id == R.id.nav_message) {
 
         } else if (id == R.id.nav_mail) {
+            // Handling the email
+            emailIntent();
 
         } else if (id == R.id.nav_offers) {
 
@@ -459,6 +461,29 @@ public class CandidateProfileActivity extends AppCompatActivity
         Intent chooser = Intent.createChooser(mCallIntent, "Please select app to make your call");
         // if App is available then start the intent
         if (isIntentSafe) {
+            startActivity(chooser);
+        }
+    }
+
+    // emailIntent method definition.
+    private void emailIntent() {
+
+        Log.d(TAG, "emailIntent: Method Called");
+
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"rohit9075@gmail.com"}); // recipients
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Email Intent Testing");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, " Email Body Message");
+
+        // Checking app availability to handle the intent
+        boolean isIntentSafe = isIntentSafe(emailIntent);
+
+        // Intent chooser for selecting the app from the app list
+        Intent chooser = Intent.createChooser(emailIntent, "Please select app to send Email");
+        // if App is available then start the intent
+        if (isIntentSafe) {
+
             startActivity(chooser);
         }
     }
