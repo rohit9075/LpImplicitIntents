@@ -1,6 +1,8 @@
 package com.rohit.lpregister.activity;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,6 +41,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class CandidateProfileActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener, RadioGroup.OnCheckedChangeListener,
@@ -411,5 +414,26 @@ public class CandidateProfileActivity extends AppCompatActivity
                 Log.d(TAG, "onActivityResult: " + error);
             }
         }
+    }
+
+    /**
+     * method to check app to handle the intent request
+     * @param mCallIntent intent
+     * @return boolean value app is available on not
+     */
+
+    private boolean isIntentSafe(Intent mCallIntent) {
+
+        Log.d(TAG, "isIntentSafe: Method Called");
+        // Checking for app is available or not in the system for handle the email intent
+        PackageManager packageManager = getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(mCallIntent, 0);
+        return activities.size() > 0;
+
+        /*
+         we can check the app in the system by usign these lines of code
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(chooser);
+        */
     }
 }
