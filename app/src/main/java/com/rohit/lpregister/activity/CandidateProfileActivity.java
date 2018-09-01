@@ -77,6 +77,8 @@ public class CandidateProfileActivity extends AppCompatActivity
 
     static String mEmailFromIntent;
 
+    String mStringMobileNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,7 +202,9 @@ public class CandidateProfileActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_call) {
-            // Handle the camera action
+            // Handle the call
+            callIntent();
+
         } else if (id == R.id.nav_message) {
 
         } else if (id == R.id.nav_mail) {
@@ -337,7 +341,10 @@ public class CandidateProfileActivity extends AppCompatActivity
 
                mEditTextDob.setText(cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CANDIDATE_DATE_OF_BIRTH)));
                String gender = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CANDIDATE_GENDER));
-               mEditTextMobile.setText(cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CANDIDATE_PHONE)));
+
+               mStringMobileNumber = (cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CANDIDATE_PHONE)));
+
+               mEditTextMobile.setText(mStringMobileNumber);
 
                if ("Male".equals(gender)){
                    mRadioButtonMale.setChecked(true);
@@ -435,5 +442,24 @@ public class CandidateProfileActivity extends AppCompatActivity
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(chooser);
         */
+    }
+
+
+    // CallIntent method definition
+    private void callIntent() {
+
+        Log.d(TAG, "callIntent: Method Called");
+
+        Intent mCallIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", mStringMobileNumber, null));
+
+        // Checking app availability for handle the intent
+        boolean isIntentSafe = isIntentSafe(mCallIntent);
+
+        // Intent choose for selecting the app from the app list
+        Intent chooser = Intent.createChooser(mCallIntent, "Please select app to make your call");
+        // if App is available then start the intent
+        if (isIntentSafe) {
+            startActivity(chooser);
+        }
     }
 }
