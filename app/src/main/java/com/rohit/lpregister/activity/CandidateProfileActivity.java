@@ -206,7 +206,8 @@ public class CandidateProfileActivity extends AppCompatActivity
             callIntent();
 
         } else if (id == R.id.nav_message) {
-
+            // Handling the sms
+            sendSMS();
         } else if (id == R.id.nav_mail) {
             // Handling the email
             emailIntent();
@@ -484,6 +485,27 @@ public class CandidateProfileActivity extends AppCompatActivity
         // if App is available then start the intent
         if (isIntentSafe) {
 
+            startActivity(chooser);
+        }
+    }
+
+
+    // sendSms method definition
+
+    private void sendSMS() {
+
+        Intent mSmsIntent = new Intent(Intent.ACTION_VIEW);
+        mSmsIntent.setData(Uri.parse("sms:"));
+        mSmsIntent.putExtra(Intent.EXTRA_TEXT, "Message Hi");
+        mSmsIntent.putExtra("receiver Number", "7033038352");
+
+
+        boolean isIntentSafe = isIntentSafe(mSmsIntent);
+
+        // Intent choose for selecting the app from the app list
+        Intent chooser = Intent.createChooser(mSmsIntent, "Select app to send sms");
+        // if App is available then start the intent
+        if (isIntentSafe) {
             startActivity(chooser);
         }
     }
