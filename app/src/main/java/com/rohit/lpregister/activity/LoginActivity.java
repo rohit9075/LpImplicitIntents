@@ -118,6 +118,10 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
 
     }
 
+    /**
+     * Method to check candidate credentials from database
+     */
+
     private void candidateLogin() {
         boolean login = mDatabaseHelper.checkCandidate(mEditTextEmail.getText().toString().trim(),mEditTextPassword.getText().toString().trim());
 
@@ -133,6 +137,9 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
         }
     }
 
+    /**
+     * method to save the  user email and password into sharedpreference file
+     */
 
     private void attemptLogin() {
 
