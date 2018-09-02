@@ -1,17 +1,18 @@
 package com.rohit.lpregister.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rohit.lpregister.R;
 import com.rohit.lpregister.database.DatabaseHelper;
-import com.rohit.lpregister.utils.InputValidation;
+import com.rohit.lpregister.utils.SharedPreference;
 
 public class LoginActivity extends AppCompatActivity  implements View.OnClickListener {
 
@@ -23,6 +24,10 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
 
     private DatabaseHelper mDatabaseHelper;
 
+    private CheckBox mCheckBoxCandidateLoginDetail;
+
+    private SharedPreference mSharedPreference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +38,17 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
         clickListener(); // clickListener(); method call
 
         initObject(); // initObject method call
+
+
+        // checking the mSharedPreference file for id and password
+        if (!new SharedPreference(this).isUserLogedOut()) {
+            //user's email and password both are saved in preferences
+
+            Intent mIntentLogin = new Intent(LoginActivity.this,CandidateProfileActivity.class);
+            mIntentLogin.putExtra("email", mEditTextEmail.getText().toString().trim());
+            startActivity(mIntentLogin);
+            finish();
+        }
     }
 
 
@@ -64,12 +80,15 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
       mTextViewRegister = findViewById(R.id.textView_register);
       mTextViewForgotPassword = findViewById(R.id.textView_forgot_password);
 
+        mCheckBoxCandidateLoginDetail = findViewById(R.id.checkbox_remember_me);
+
 
     }
 
     public void initObject(){
 
         mDatabaseHelper = new DatabaseHelper(this);
+        mSharedPreference = new SharedPreference(this);
 
     }
 
@@ -80,7 +99,7 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
 
             case R.id.button_login:
 
-                candidateLogin();
+                attemptLogin();
                 break;
 
             case R.id.textView_admin:
@@ -112,5 +131,21 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
         }else {
             Toast.makeText(this, "Invalid id and password", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    private void attemptLogin() {
+
+        String mStringName = mEditTextEmail.getText().toString().trim();
+        String mStringPassword = mEditTextPassword.getText().toString().trim();
+        // checking the checkbox to save the user data to mSharedPreference file
+        if (mCheckBoxCandidateLoginDetail.isChecked()) {
+            mSharedPreference.saveLoginDetails(mStringName, mStringPassword);
+            candidateLogin();
+        }
+        else {
+            candidateLogin();
+        }
+
     }
 }

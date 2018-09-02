@@ -1,5 +1,6 @@
 package com.rohit.lpregister.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -17,6 +18,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -36,6 +38,7 @@ import com.rohit.lpregister.R;
 import com.rohit.lpregister.database.Constants;
 import com.rohit.lpregister.database.DatabaseHelper;
 import com.rohit.lpregister.model.Candidate;
+import com.rohit.lpregister.utils.SharedPreference;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -60,6 +63,8 @@ public class CandidateProfileActivity extends AppCompatActivity
     // RadioButton object Declaration.
     private RadioButton mRadioButton , mRadioButtonMale, mRatioButtonFemale;
 
+    SharedPreference mSharedPreference;
+
 
     // Switch referenceVariable
     private Switch mEditUpdateSwitch;
@@ -77,7 +82,7 @@ public class CandidateProfileActivity extends AppCompatActivity
 
     static String mEmailFromIntent;
 
-    String mStringMobileNumber;
+    static String mStringMobileNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +163,7 @@ public class CandidateProfileActivity extends AppCompatActivity
 
         // database helper object instantiation
       mDatabaseHelper = new DatabaseHelper(this);
+        mSharedPreference = new SharedPreference(this);
 
 
 
@@ -188,7 +194,8 @@ public class CandidateProfileActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_exit) {
+            alertDialog();
             return true;
         }
 
@@ -202,20 +209,21 @@ public class CandidateProfileActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_call) {
-            // Handle the call
+            // Handle the call action
             callIntent();
-
         } else if (id == R.id.nav_message) {
-            // Handling the sms
+
+            // Handle the sms action
             sendSMS();
         } else if (id == R.id.nav_mail) {
-            // Handling the email
-            emailIntent();
 
+            //Handle the email action
+            emailIntent();
         } else if (id == R.id.nav_offers) {
 
-        } else if (id == R.id.nav_log_out) {
 
+        } else if (id == R.id.nav_log_out) {
+            alertDialog();
 
         }
 
@@ -344,11 +352,9 @@ public class CandidateProfileActivity extends AppCompatActivity
 
                mEditTextDob.setText(cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CANDIDATE_DATE_OF_BIRTH)));
                String gender = cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CANDIDATE_GENDER));
-
-               mStringMobileNumber = (cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CANDIDATE_PHONE)));
+             mStringMobileNumber =   (cursor.getString(cursor.getColumnIndex(Constants.COLUMN_CANDIDATE_PHONE)));
 
                mEditTextMobile.setText(mStringMobileNumber);
-
                if ("Male".equals(gender)){
                    mRadioButtonMale.setChecked(true);
                }else {
@@ -425,6 +431,47 @@ public class CandidateProfileActivity extends AppCompatActivity
             }
         }
     }
+
+    /**
+     * CustomProgressDialog method to show the logout message.
+     */
+    public void alertDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(CandidateProfileActivity.this);
+        alertDialog.setTitle("Log Out");
+        alertDialog.setMessage("Are you sure you want to Log Out");
+
+        alertDialog.setPositiveButton("YES", new
+                DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // logOut method call
+                        logOut();
+
+                    }
+                });
+        alertDialog.setNegativeButton("NO", new
+                DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    /**
+     * Method for logout and clear user data from the shared preference.
+     */
+    private void logOut() {
+
+        // Clear the mSharedPreference data from the file
+        mSharedPreference.clear();
+        // Starting the Home Activity.
+        Intent mIntentLogin = new Intent(this, LoginActivity.class);
+        startActivity(mIntentLogin);
+        finish();
+    }
+
 
     /**
      * method to check app to handle the intent request
